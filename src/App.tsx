@@ -1,12 +1,16 @@
 import React from 'react';
-import ExampleComponent from './components/ExampleComponent';
 import './styles/index.css';
+import ExpenseManagement from './components/ExpenseManagement';
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <h1 className="text-3xl font-bold underline">Welcome to My React App</h1>
-      <ExampleComponent />
+      <header className="bg-blue-600 text-white p-4">
+        <h1 className="text-3xl font-bold">Expense Manager</h1>
+      </header>
+      <main className="p-4">
+        <ExpenseManagement />
+      </main>
     </div>
   );
 };
