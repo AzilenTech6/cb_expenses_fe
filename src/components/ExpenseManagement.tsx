@@ -20,9 +20,21 @@ const ExpenseManagement: React.FC = () => {
     description: '',
   });
   const [error, setError] = useState('');
+  const [spendingLimits, setSpendingLimits] = useState<{ [key: string]: number }>({});
+  const [alerts, setAlerts] = useState<string>('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSetLimit = (category: string, limit: number) => {
+    setSpendingLimits({ ...spendingLimits, [category]: limit });
+  };
+
+  const checkSpendingLimit = (category: string, amount: number) => {
+    if (spendingLimits[category] && amount > spendingLimits[category]) {
+      setAlerts(`You have exceeded the spending limit for ${category}!`);
+    }
   };
 
   const addExpense = () => {
@@ -31,6 +43,7 @@ const ExpenseManagement: React.FC = () => {
       return;
     }
     setError('');
+    checkSpendingLimit(form.category, parseFloat(form.amount));
     const newExpense: Expense = {
       id: Date.now(),
       amount: parseFloat(form.amount),
@@ -97,6 +110,7 @@ const ExpenseManagement: React.FC = () => {
         </button>
       </div>
       {error && <p className="text-red-500">{error}</p>}
+      {alerts && <p className="text-red-500">{alerts}</p>}
       <ul>
         {expenses.map(expense => (
           <li key={expense.id} className="border p-2 mb-2">
@@ -121,6 +135,20 @@ const ExpenseManagement: React.FC = () => {
           </li>
         ))}
       </ul>
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold">Set Spending Limits</h3>
+        {categories.map((cat, index) => (
+          <div key={index} className="mb-2">
+            <label className="mr-2">{cat}:</label>
+            <input
+              type="number"
+              placeholder="Set limit"
+              onBlur={(e) => handleSetLimit(cat, parseFloat(e.target.value))}
+              className="border p-2"
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
