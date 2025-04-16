@@ -1,26 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './styles/index.css';
-import Sidebar from './components/Sidebar';
-import MonthNavigation from './components/MonthNavigation';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Layout from './components/Layout';
 import ExpenseManagement from './components/ExpenseManagement';
 import Charts from './components/Charts';
+import BudgetManagement from './components/BudgetManagement';
+import GoalsAndSupport from './components/GoalsAndSupport';
+import IncomeFlow from './components/IncomeFlow';
 
 const App: React.FC = () => {
-  const [selectedMonth, setSelectedMonth] = useState('January');
-  const [activeTab, setActiveTab] = useState('expenses');
-
   return (
-    <div className="flex h-screen">
-      <Sidebar selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
-      <div className="flex flex-col flex-1">
-        <MonthNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
-        <main className="p-4 flex-1 overflow-y-auto">
-          {activeTab === 'expenses' && <ExpenseManagement />}
-          {activeTab === 'charts' && <Charts expenses={[]} />}
-          {/* Add more components for other tabs */}
-        </main>
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Navigate to="/january/expense-management" />} />
+          <Route path=":month/expense-management" element={<ExpenseManagement />} />
+          <Route path=":month/income-flow" element={<IncomeFlow />} />
+          <Route path=":month/charts" element={<Charts expenses={[]} />} />
+          <Route path=":month/budget-management" element={<BudgetManagement />} />
+          <Route path=":month/goals-support" element={<GoalsAndSupport />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 };
 
